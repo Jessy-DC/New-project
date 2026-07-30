@@ -71,8 +71,12 @@ public class StatisticsService : IStatisticsService
         var previousSavings = previousIncome - totalPreviousExpenses;
         var savedAmount = currentSavings - previousSavings;
 
-        // Répartition par catégorie
+        // Répartition par catégorie (désactivé temporairement - nécessite Include pour charger Categorie)
+        // TODO: Activer une fois que le repository supporte Include
+        var categoryGroups = new List<ExpenseCategorySplitDto>();
+        /*
         var categoryGroups = currentExpenses
+            .Where(t => t.Categorie != null)
             .GroupBy(t => new { t.Categorie.Id, t.Categorie.Nom })
             .Select(g => new ExpenseCategorySplitDto
             {
@@ -85,6 +89,7 @@ public class StatisticsService : IStatisticsService
             })
             .OrderByDescending(c => c.Montant)
             .ToList();
+        */
 
         // Répartition Essentiel vs Plaisir
         var essentialExpenses = currentExpenses
@@ -107,12 +112,17 @@ public class StatisticsService : IStatisticsService
                 : 0
         };
 
-        // Évolution par catégorie (comparaison avec la période précédente)
+        // Évolution par catégorie (désactivé temporairement - nécessite Include pour charger Categorie)
+        // TODO: Activer une fois que le repository supporte Include
+        var trends = new List<CategoryTrendDto>();
+        /*
         var currentCategoryExpenses = currentExpenses
+            .Where(t => t.Categorie != null)
             .GroupBy(t => new { t.Categorie.Id, t.Categorie.Nom })
             .ToDictionary(g => g.Key.Id, g => new { g.Key.Nom, Montant = g.Sum(t => t.Montant) });
 
         var previousCategoryExpenses = previousExpenses
+            .Where(t => t.Categorie != null)
             .GroupBy(t => new { t.Categorie.Id, t.Categorie.Nom })
             .ToDictionary(g => g.Key.Id, g => new { g.Key.Nom, Montant = g.Sum(t => t.Montant) });
 
@@ -156,6 +166,7 @@ public class StatisticsService : IStatisticsService
 
         // Trier par delta montant (les plus économisés en premier)
         trends = trends.OrderBy(t => t.DeltaMontant).ToList();
+        */
 
         // Meilleure catégorie (celle qui a le plus baissé en pourcentage)
         BestCategoryDto? bestCategory = null;

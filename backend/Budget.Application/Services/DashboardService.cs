@@ -157,11 +157,13 @@ public class DashboardService : IDashboardService
             }
         }
 
-        // 2. Catégorie dominante
-        if (monthTransactions.Any(t => t.Type == TransactionType.Depense))
+        // 2. Catégorie dominante (désactivé temporairement - nécessite Include pour charger Categorie)
+        // TODO: Activer une fois que le repository supporte Include
+        /*
+        if (monthTransactions.Any(t => t.Type == TransactionType.Depense && t.Categorie != null))
         {
             var categoryExpenses = monthTransactions
-                .Where(t => t.Type == TransactionType.Depense)
+                .Where(t => t.Type == TransactionType.Depense && t.Categorie != null)
                 .GroupBy(t => t.Categorie.Nom)
                 .Select(g => new { Category = g.Key, Total = g.Sum(t => t.Montant) })
                 .OrderByDescending(x => x.Total)
@@ -180,6 +182,7 @@ public class DashboardService : IDashboardService
                 }
             }
         }
+        */
 
         // 3. Progression vers l'objectif principal
         if (mainObjectif != null && !mainObjectif.EstAtteint())
